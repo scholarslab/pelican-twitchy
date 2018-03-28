@@ -3,7 +3,7 @@
 {% block content %}
 <div class="row">
     <div class="col-lg-9">
-    {% if articles %}
+    {% if articles and CAT_SORT[category]=="SLUG" %}
         {% for article in (articles_page.object_list|sort(attribute='slug') if articles_page else articles|sort(attribute='slug')) %}
             <article>
                 <h4>
@@ -12,7 +12,17 @@
                 </h4>
             </article>
         {% endfor %}
+    {% elif articles and CAT_SORT[category]=="DATE" %}
+        {% for article in (articles_page.object_list|sort(attribute='date', reverse = False) if articles_page else articles|sort(attribute='date', reverse = False))  %}
+            <article>
+                <h4>
+                    <time datetime="{{ article.date.isoformat() }}"> {{ article.date.strftime("%x") }}</time>
+                    <a href="{{ SITEURL }}/{{ article.url }}">{{ article.title }}</a>
+                </h4>
+            </article>
+        {% endfor %}
     {% endif %}
+
     </div>
 </div>
 {% endblock %}
